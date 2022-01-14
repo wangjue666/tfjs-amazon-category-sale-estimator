@@ -1,4 +1,6 @@
-export default {
+const categories: {
+    [propName: string]: string[]
+} =  {
     "us": ["Appliances","Arts, Crafts & Sewing","Automotive","Baby","Beauty & Personal Care","Camera & Photo","Cell Phones & Accessories","Clothing, Shoes & Jewelry","Computers & Accessories","Electronics","Grocery & Gourmet Food","Health & Household","Home & Kitchen","Industrial & Scientific","Kitchen & Dining","Musical Instruments","Office Products","Patio, Lawn & Garden","Pet Supplies","Software","Sports & Outdoors","Tools & Home Improvement","Toys & Games","Video Games"],
     "de": ["Auto & Motorrad","Baby","Baumarkt","Beauty","Bekleidung","Beleuchtung","Bürobedarf & Schreibwaren","Computer & Zubehör","Drogerie & Körperpflege","Elektro-Großgeräte","Elektronik & Foto","Games","Garten","Gewerbe, Industrie & Wissenschaft","Haustier","Kamera & Foto","Koffer, Rucksäcke & Taschen","Küche, Haushalt & Wohnen","Lebensmittel & Getränke","Musikinstrumente & DJ-Equipment","Schmuck","Schuhe & Handtaschen","Spielzeug","Sport & Freizeit","Uhren"],
     "uk": ["Automotive","Baby Products","Beauty","Business, Industry & Science","Clothing","Computers & Accessories","DIY & Tools","Electronics & Photo","Garden & Outdoors","Grocery","Health & Personal Care","Home & Kitchen","Jewellery","Large Appliances","Lighting","Luggage","Musical Instruments & DJ","PC & Video Games","Pet Supplies","Shoes & Bags","Sports & Outdoors","Stationery & Office Supplies","Toys & Games","Watches"],
@@ -10,3 +12,4 @@ export default {
     "mx": ["Bebé","Deportes y Aire Libre","Electrónicos","Herramientas y Mejoras del Hogar","Hogar y Cocina","Industria, Empresas y Ciencia","Instrumentos Musicales","Juguetes y Juegos","Libros","Música","Oficina y papelería","Ropa, Zapatos y Accesorios","Salud, Belleza y Cuidado Personal","Videojuegos"],
     "in": ["Baby","Baby Products","Bags, Wallets & Luggage","Beauty","Books","Car & Motorbike","Clothing & Accessories","Electronics","Gift Cards","Grocery & Gourmet Foods","Health & Personal Care","Home & Kitchen","Industrial & Scientific","Jewellery","Movies & TV Shows","Music","Musical Instruments","Office Products","Pet Supplies","Shoes & Handbags","Software","Sports, Fitness & Outdoors","Toys & Games","Video Games","Watches"],
 }
+export default categories

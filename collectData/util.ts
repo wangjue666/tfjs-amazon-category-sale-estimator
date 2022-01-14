@@ -1,4 +1,4 @@
-import { json2csv } from 'json-2-csv'
+import { json2csv, csv2json } from 'json-2-csv'
 import fs from "fs"
 
 export function saveCsv(arr: object[], fileName: string) {
@@ -19,3 +19,14 @@ export function sleep(timer: number) {
         }, timer)
     })
 }
+function saveJSON(){
+    fs.readFile("./train/sale.csv", (err, csv)=>{
+        console.log(err)
+        csv2json(csv.toString(), (err, json)=>{
+            if(json){
+                fs.writeFileSync("./sale.json", JSON.stringify(json))
+            }
+        })
+    })
+}
+

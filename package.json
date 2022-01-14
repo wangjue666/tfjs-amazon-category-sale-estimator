@@ -1,0 +1,15 @@
+{
+  "name": "tfjs-amazon-category-sale-estimator",
+  "version": "1.0.0",
+  "description": "使用tensorflow.js 根据亚马逊分类排名预测销量",
+  "main": "index.js",
+  "scripts": {
+    "tarin": "npx parcel train/index.html"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tensorflow/tfjs": "^3.13.0",
+    "@tensorflow/tfjs-vis": "^1.5.1"
+  }
+}

@@ -11,5 +11,9 @@
   "dependencies": {
     "@tensorflow/tfjs": "^3.13.0",
     "@tensorflow/tfjs-vis": "^1.5.1"
+  },
+  "devDependencies": {
+    "axios": "^0.24.0",
+    "json-2-csv": "^3.15.1"
   }
 }

@@ -13,19 +13,23 @@ window.onload = async () => {
     model.add(tf.layers.dense({ units: 1, inputShape: [1] }))
     model.compile({ loss: tf.losses.meanSquaredError, optimizer: tf.train.sgd(0.00001) })
 
-    const inputs = normalize(tf.tensor(xs))
-    const labels = normalize(tf.tensor(ys))
+    const [inputs, inputSubVal, inputMin] = normalize(tf.tensor(xs))
+    const [labels, labelSubVal, labelMin] = normalize(tf.tensor(ys))
+   
     await model.fit(inputs, labels, {
-        batchSize: 10,
+        batchSize: saleDataset.length,
         epochs: 10,
         callbacks: tfvis.show.fitCallbacks({ name: '训练过程', }, ['loss'])
     })
 
+    const predictRank = 10
+    const output = model.predict(
+        tf.tensor([predictRank]).sub(inputMin).div(inputSubVal)
+    ) as tf.Tensor
 
-    const output = model.predict(tf.tensor([5])) as tf.Tensor
-    output.print()
-    console.log(output.dataSync())
 
+    console.log('输入排名为', predictRank, '预测结果为',output.mul(labelSubVal).add(labelMin).dataSync()[0])
+    
 }
 function plot(){
     tfvis.render.scatterplot(
@@ -39,9 +43,13 @@ function plot(){
     )
 }
 
-function normalize(tensor: tf.Tensor) {
+function normalize(tensor: tf.Tensor):[tf.Tensor, tf.Tensor, tf.Tensor] {
     const min = tensor.min()
     const max = tensor.max()
-
-    return tensor.div(max.sub(min))
+    const subVal = max.sub(min)
+    return [
+        tensor.div(subVal),
+        subVal,
+        min
+    ]
 }

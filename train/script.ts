@@ -11,29 +11,26 @@ window.onload = async () => {
     plot()
     const xs = saleDataset.map(item => item.rank)
     const ys = saleDataset.map(item => item.sale)
-
+    const tensors = {
+        rawTrainFeatures: tf.tensor2d(xs),
+        trainTarget: tf.tensor2d(ys)
+    }
+    
 
     const model = tf.sequential()
-    model.add(tf.layers.dense({ units: 1, inputShape: [1], activation: 'relu' }))
-    model.add(tf.layers.dense({
-        units: 1,
-        activation: 'sigmoid'
-    }))
+    
     model.compile({ loss: tf.losses.meanSquaredError, optimizer: tf.train.sgd(0.1) })
-    // model.compile({
-    //     loss: tf.losses.logLoss,
-    //     optimizer: tf.train.adam(0.1)
-    // })
-    const [inputs, inputSubVal, inputMin] = normalize(tf.tensor(xs))
-    const [labels, labelSubVal, labelMin] = normalize(tf.tensor(ys))
+    let {dataMean, dataStd} = determineMeanAndStddev(tensors.rawTrainFeatures)
+    const trainFeatures = normalizeTensor(tensors.rawTrainFeatures, dataMean, dataStd)
+    model.add(tf.layers.dense({inputShape: [1], units: 1}));
    
-    await model.fit(inputs, labels, {
+    await model.fit(trainFeatures, tensors.trainTarget, {
         batchSize: saleDataset.length,
-        epochs: 300,
+        epochs: 100,
         callbacks: tfvis.show.fitCallbacks({ name: '训练过程', }, ['loss'])
     })
 
-    predict(model, inputMin, inputSubVal, labelSubVal, labelMin)
+    predict(model, dataMean, dataStd)
     
 }
 function plot(){
@@ -48,26 +45,26 @@ function plot(){
     )
 }
 
-function normalize(tensor: tf.Tensor):[tf.Tensor, tf.Tensor, tf.Tensor] {
-    const min = tensor.min()
-    const max = tensor.max()
-    const subVal = max.sub(min)
-    return [
-        tensor.sub(min).div(subVal),
-        subVal,
-        min
-    ]
+function normalizeTensor(data:tf.Tensor, dataMean:tf.Tensor, dataStd:tf.Tensor) {
+    return data.sub(dataMean).div(dataStd)
 }
+function determineMeanAndStddev(data: tf.Tensor) {
+    const dataMean = data.mean(0)
+    const diffFromMean = data.sub(dataMean);
+    const squaredDiffFromMean = diffFromMean.square();
+    const variance = squaredDiffFromMean.mean(0)
+    const dataStd = variance.sqrt()
+    return {dataMean, dataStd}
+  }
 
-
-function predict(model: tf.Sequential, inputMin: tf.Tensor, inputSubVal: tf.Tensor, labelSubVal: tf.Tensor, labelMin: tf.Tensor,){
+function predict(model: tf.Sequential, dataMean:tf.Tensor, dataStd:tf.Tensor){
     const predictRank = 100
     const output = model.predict(
-        tf.tensor([predictRank]).sub(inputMin).div(inputSubVal)
+        normalizeTensor(tf.tensor([predictRank]), dataMean, dataStd)
     ) as tf.Tensor
 
 
     console.log('输入排名为', predictRank, 
     '预测结果为',
-    output.mul(labelSubVal).add(labelMin).dataSync()[0], '实际结果为 240')
+    output.mul(dataStd).add(dataMean).dataSync()[0], '实际结果为 240')
 }

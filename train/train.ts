@@ -29,13 +29,13 @@ window.onload = async () => {
         activation: 'sigmoid',
         kernelInitializer: 'leCunNormal'
     }))
-    
+
     model.add(tf.layers.dense({units: 1}))
-    model.compile({ loss: tf.losses.meanSquaredError, optimizer: tf.train.sgd(0.001) })
+    model.compile({ loss: tf.losses.meanSquaredError, optimizer: tf.train.sgd(0.01) })
 
     await model.fit(trainFeatures, trainTarget, {
         batchSize: saleDataset.length,
-        epochs: 100,
+        epochs: 300,
         callbacks: tfvis.show.fitCallbacks({ name: '训练过程', }, ['loss'])
     })
     console.log("得到的权重", model.layers[0].getWeights()[0].dataSync())
